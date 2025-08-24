@@ -1,0 +1,86 @@
+https://www.geeksforgeeks.org/problems/boundary-traversal-of-binary-tree/1
+
+/*
+// Tree Node
+class Node {
+  public:
+    int data;
+    Node* left;
+    Node* right;
+
+    // Constructor to initialize a new node
+    Node(int val) {
+        data = val;
+        left = NULL;
+        right = NULL;
+    }
+};
+*/
+
+class Solution {
+  public:
+    void leftB(Node *root, vector<int>& ans){
+        if(root==NULL)return;
+        if(root->left == NULL && root->right == NULL)return;
+        ans.push_back(root->data);
+        if(root->left)leftB(root->left,ans);
+        else leftB(root->right,ans);
+    }
+    void leaf(Node *root, vector<int>& ans){
+        if(root==NULL)return;
+        if(root->left == NULL && root->right == NULL){
+            ans.push_back(root->data);
+            return;
+        }
+        leaf(root->left,ans);
+        leaf(root->right,ans);
+    }
+    void rightB(Node *root, vector<int>& ans,stack<Node*>& st){
+        if(root==NULL)return;
+        if(root->left == NULL && root->right == NULL)return;
+        st.push(root);
+        if(root->right)rightB(root->right,ans,st);
+        else rightB(root->left,ans,st);
+    }
+    vector<int> boundaryTraversal(Node *root) {
+        vector<int> ans;
+        if(root==NULL)return ans;
+        ans.push_back(root->data);
+        if(root->left == NULL && root->right == NULL)return ans;
+        leftB(root->left,ans);
+        leaf(root,ans);
+        stack<Node*> st;
+        rightB(root->right,ans,st);
+        while(!st.empty()){
+            ans.push_back(st.top()->data);
+            st.pop();
+        }
+        return ans;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
