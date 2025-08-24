@@ -1,0 +1,37 @@
+https://leetcode.com/problems/binary-tree-maximum-path-sum/description/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int pathMax(TreeNode* root){
+        if(root==NULL)return INT_MIN;
+        int leftSum = 0, rightSum=0;
+        if(root->left)leftSum = pathMax(root->left);
+        if(root->right)rightSum=pathMax(root->right);
+        return max(root->val,root->val + max(leftSum,rightSum)); 
+    }
+    int solve(TreeNode* root){
+        if(root == NULL)return INT_MIN;
+        int leftSum = 0, rightSum=0;
+        if(root->left)leftSum = pathMax(root->left);
+        if(root->right)rightSum=pathMax(root->right);
+        int cur = max(root->val + max(leftSum,rightSum),root->val + leftSum + rightSum);
+        cur=max(cur,root->val);
+        cout<<root->val<<" ;; "<<cur <<" ls:"<<leftSum<<" rs:"<<rightSum<<endl;
+        return max(cur,max(solve(root->left),solve(root->right)) ); 
+    }
+    int maxPathSum(TreeNode* root) {
+        if(root==NULL)return 0;
+        return solve(root);
+    }
+};
