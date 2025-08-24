@@ -45,29 +45,34 @@ class Solution {
             s2.pop();
         }
     }
-    void oneStack(Node* root,vector<int>& ans){
+void oneStack(Node* root,vector<int>& ans){
         if(root==NULL)return;
         stack<Node*> st;
         Node* cur = root;
         while(true){
             if(cur!=NULL){
                 st.push(cur);
-                cur=cur->left;        
+                cur=cur->left;
             }
             else{
                 Node* temp = st.top()->right;
                 if(temp==NULL){
-                    temp = st.top();
+                    //I am at such an element whos left and right both are null
+                    temp = st.top();//going at that element
                     st.pop();
                     ans.push_back(temp->data);
-                    while(st.empty()==false && temp==st.top()->right){
-                        temp=st.top();
-                        st.pop();
+                    //we have 2 case
+                    //if i am left element of a tree, i need to 
+                    //go to the right side, If i am on right side,
+                    // i need to go to base
+                    while(st.empty()==false && temp == st.top()->right) {
+                        //in this case, add me in ans
+                        temp = st.top(); st.pop();
                         ans.push_back(temp->data);
                     }
                 }
                 else{
-                    cur = temp;
+                    cur = temp; //cur is NULL and st.top()->right exists
                 }
             }
             if(st.empty())break;
