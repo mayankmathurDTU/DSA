@@ -1,0 +1,101 @@
+https://www.geeksforgeeks.org/problems/postorder-traversal/1
+
+Recursive approach : Easy
+Using Two Stack : Medium
+Using one stack : difficult
+
+/* A binary tree node has data, pointer to left child
+   and a pointer to right child
+struct Node
+{
+    int data;
+    struct Node* left;
+    struct Node* right;
+}; */
+class Solution {
+  public:
+    // Function to return a list containing the postorder traversal of the tree.
+    void postOrderTraversal(Node* root,vector<int>& ans){
+        if(root==NULL)return;
+        
+        postOrderTraversal(root->left,ans);
+        postOrderTraversal(root->right,ans);
+        ans.push_back(root->data);
+    }
+    void twoStack(Node* root,vector<int>& ans){
+        if(root==NULL)return;
+        stack<Node*> s1,s2;
+        s1.push(root);
+        while(!s1.empty()){
+            //take one out and put in second stack
+            auto top = s1.top(); s1.pop();
+            s2.push(top);
+            
+            //check for left -> left goes in s1 first
+            // then right goes in s1. so first right will be
+            //processed and goes in s2 then left 
+            //hence in s2 if we see from top 
+            //first we see left then right then centre
+            if(top->left)s1.push(top->left); 
+            
+            if(top->right)s1.push(top->right); 
+        }
+        while(!s2.empty()){
+            ans.push_back(s2.top()->data);
+            s2.pop();
+        }
+    }
+    void oneStack(Node* root,vector<int>& ans){
+        if(root==NULL)return;
+        stack<Node*> st;
+        Node* cur = root;
+        while(true){
+            if(cur!=NULL){
+                st.push(cur);
+                cur=cur->left;        
+            }
+            else{
+                Node* temp = st.top()->right;
+                if(temp==NULL){
+                    temp = st.top();
+                    st.pop();
+                    ans.push_back(temp->data);
+                    while(st.empty()==false && temp==st.top()->right){
+                        temp=st.top();
+                        st.pop();
+                        ans.push_back(temp->data);
+                    }
+                }
+                else{
+                    cur = temp;
+                }
+            }
+            if(st.empty())break;
+        }
+    }
+    vector<int> postOrder(Node* root) {
+        vector<int> ans;
+        //postOrderTraversal(root,ans);
+        //twoStack(root,ans);
+        oneStack(root,ans);
+        return ans;
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
