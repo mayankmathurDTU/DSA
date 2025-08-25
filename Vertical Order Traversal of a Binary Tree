@@ -1,0 +1,43 @@
+https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/submissions/1748094557/
+
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> verticalTraversal(TreeNode* root) {
+        vector<vector<int>> ans;
+        if(root==NULL)return ans;
+        queue<pair<TreeNode*,pair<int,int>>> q; //node val,x,y
+        map<int,map<int,multiset<int>>> mp; // y<x,values>
+        q.push({root,{0,0}});
+        while(!q.empty()){
+            auto top = q.front(); q.pop();
+            TreeNode* cur = top.first;
+            int x = top.second.first;
+            int y = top.second.second;
+            mp[y][x].insert(cur->val);
+            if(cur->left)q.push({cur->left,{x+1,y-1}});
+            if(cur->right)q.push({cur->right,{x+1,y+1}});
+        }
+        for(auto it = mp.begin() ; it!= mp.end() ; it++){
+            vector<int> temp;
+            for(auto it1 = it->second.begin() ; it1!=it->second.end() ; it1++){
+                for(auto it2=it1->second.begin() ; it2!=it1->second.end() ; it2++){
+                    temp.push_back(*it2);
+                }
+            }
+            ans.push_back(temp);
+        }
+        return ans;
+    }
+};
+
