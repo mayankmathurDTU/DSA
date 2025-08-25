@@ -1,0 +1,43 @@
+https://www.geeksforgeeks.org/problems/top-view-of-binary-tree/1
+
+/*
+struct Node
+{
+    int data;
+    Node* left;
+    Node* right;
+};
+*/
+class Solution {
+  public:
+    // Function to return a list of nodes visible from the top view
+    // from left to right in Binary Tree.
+    vector<int> topView(Node *root) {
+        vector<int> ans;
+        if(root==NULL)return ans;
+        ans.push_back(root->data);
+        if(root->left==NULL && root->right==NULL)return ans;
+        ans.pop_back();
+
+        queue<pair<Node*,int>> q;
+        q.push({root,0});
+        map<int,int>mp;
+        while(!q.empty()){
+            auto top = q.front(); q.pop();
+            Node* cur = top.first;
+            int ver = top.second;
+            if(mp.count(ver)==0)mp[ver]=cur->data;
+            if(cur->left){
+                q.push({cur->left,ver-1});
+            }
+            if(cur->right){
+                q.push({cur->right,ver+1});
+            }
+            
+        }
+        for(auto it=mp.begin() ; it!= mp.end() ; it++){
+            ans.push_back(it->second);
+        }
+        return ans;
+    }
+};
